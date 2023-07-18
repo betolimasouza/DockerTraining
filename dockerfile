@@ -2,7 +2,7 @@ FROM ubuntu:18.04
 LABEL maintainer="robertodelimasouza@gmail.com"
 RUN apt-get update && apt-get install nginx curl -y && rm -rf /var/lib/apt/lists/*
 EXPOSE 80
-ADD https://github.com/prometheus/node_exporter/releases/download/v1.6.0/node_exporter-1.6.0.linux-amd64.tar.gz /root/
+ADD node_exporter-1.6.0.linux-amd64.tar.gz /root/
 COPY index.html /var/www/html/
 WORKDIR /var/www/html/
 ENV APP_VERSION 1.0.0
