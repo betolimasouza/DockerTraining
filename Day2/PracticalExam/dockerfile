@@ -1,0 +1,18 @@
+FROM alpine:3
+
+RUN apk update &&\
+    apk add nginx &&\
+    adduser -D -g 'www' www &&\
+    mkdir /www &&\
+    chown -R www:www /var/lib/nginx &&\
+    chown -R www:www /www
+
+HEALTHCHECK --timeout=2s CMD curl -f localhost || exit 1
+
+EXPOSE 80
+
+COPY index.html /var/www/html/
+WORKDIR /var/www/html/
+
+ENTRYPOINT ["nginx"]
+CMD ["-g", "daemon off;"]
