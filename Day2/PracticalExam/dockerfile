@@ -1,18 +1,21 @@
-FROM alpine:3
+FROM alpine:latest
+LABEL maintainer="robertodelimasouza@gmail.com"
 
-RUN apk update &&\
-    apk add nginx &&\
-    adduser -D -g 'www' www &&\
-    mkdir /www &&\
-    chown -R www:www /var/lib/nginx &&\
-    chown -R www:www /www
+RUN apk add nginx
+RUN mkdir -p /run/nginx
+RUN touch /run/nginx/nginx.pid
+RUN adduser -D -g 'www' www
+RUN mkdir /www 
+RUN chown -R www:www /var/lib/nginx
+RUN chown -R www:www /www
 
-HEALTHCHECK --timeout=2s CMD curl -f localhost || exit 1
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY index.html /www
 
 EXPOSE 80
 
-COPY index.html /var/www/html/
-WORKDIR /var/www/html/
-
 ENTRYPOINT ["nginx"]
+
 CMD ["-g", "daemon off;"]
+
+HEALTHCHECK --timeout=2s CMD curl -f localhost || exit 1
